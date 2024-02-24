@@ -8,7 +8,7 @@ warnings.filterwarnings("ignore")
 import pandas as pd
 
 
-class GetData:
+class pred:
 	def __init__(self):
 		return
 	def getData(self,fi1):
@@ -17,7 +17,7 @@ class GetData:
 		ml=ml.data
 		da=str(ml)
 		return da
-	def reformat(self,da):
+	def reformat(self,Da):
 		i=0
 		FD=[]
 		lis=[]
@@ -42,17 +42,16 @@ class GetData:
 			if '<time dateTime=' not in da[i+1:len(da)]:
 				break
 		FD.reverse()
-		FD=[FD[i][0].split('/')+FD[i][1:5] for i in range(len(FD))]
+		FD=[[FD[i][0].replace('/','-')]+FD[i][1:5] for i in range(len(FD))]
 		Reformated_data = {
-			"Month":[int(FD[i][0]) for i in range(len(FD))],
-			"Day":[int(FD[i][1]) for i in range(len(FD))],
-			"Year":[int(FD[i][2]) for i in range(len(FD))],
-			"Price":[float(FD[i][3]) for i in range(len(FD))],
-			"Open":[float(FD[i][4]) for i in range(len(FD))],
-			"High":[float(FD[i][5]) for i in range(len(FD))],
-			"Low":[float(FD[i][6]) for i in range(len(FD))]
+			"Date":[FD[i][0] for i in range(len(FD))],
+			"Price":[float(FD[i][1]) for i in range(len(FD))],
+			"Open":[float(FD[i][2]) for i in range(len(FD))],
+			"High":[float(FD[i][3]) for i in range(len(FD))],
+			"Low":[float(FD[i][4]) for i in range(len(FD))]
 			}
 		PriceData = pd.DataFrame(Reformated_data)
 		return PriceData
+
 
 
