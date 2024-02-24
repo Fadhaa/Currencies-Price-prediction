@@ -1,6 +1,11 @@
 Created on Feb 24 2024
 @author Fadhaa Ali
 
+import urllib3
+import gc
+import warnings
+warnings.filterwarnings("ignore")
+import pandas as pd
 
 
 class GetData:
