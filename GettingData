@@ -17,7 +17,7 @@ class GetData:
 		ml=ml.data
 		da=str(ml)
 		return da
-	def reformat(self,Da):
+	def reformat(self,da):
 		i=0
 		FD=[]
 		lis=[]
