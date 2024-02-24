@@ -1,0 +1,53 @@
+Created on Feb 24 2024
+@author Fadhaa Ali
+
+
+
+class GetData:
+	def __init__(self):
+		return
+	def getData(self,fi1):
+		htt=urllib3.PoolManager()
+		ml = htt.request('GET', fi1)
+		ml=ml.data
+		da=str(ml)
+		return da
+	def reformat(self,Da):
+		i=0
+		FD=[]
+		lis=[]
+		while i<len(da):
+			i=da.index('<time dateTime=',i+1,len(da))
+			if '<time dateTime=' in da[i:len(da)] and da[i:i+15]=='<time dateTime=' and da[i+26:i+28]=='">':
+				lis.append(da[i+16:i+26])
+				if 'text-positive-main" dir="ltr">' in da[i:i+1305]:
+					ix2=da.index('text-positive-main" dir="ltr">',i,i+1305)
+				if 'text-negative-main" dir="ltr">' in da[i:i+1305]:
+					ix2=da.index('text-negative-main" dir="ltr">',i,i+1305)
+				if 'text-positive-main" dir="ltr">' in da[i:i+1305] or 'text-negative-main" dir="ltr">' in da[i:i+1305]:
+					ix3=da.index('</td>',ix2,len(da))
+					lis.append(da[ix2+30:ix3])
+					for k in range(0,3):
+						j=ix3
+						ix2=da.index('test="relative-most-active-last">',j,len(da))
+						ix3=da.index('</td>',ix2,len(da))
+						lis.append(da[ix2+33:ix3])
+					FD.append(lis)
+					lis=[]
+			if '<time dateTime=' not in da[i+1:len(da)]:
+				break
+		FD.reverse()
+		FD=[FD[i][0].split('/')+FD[i][1:5] for i in range(len(FD))]
+		Reformated_data = {
+			"Month":[int(FD[i][0]) for i in range(len(FD))],
+			"Day":[int(FD[i][1]) for i in range(len(FD))],
+			"Year":[int(FD[i][2]) for i in range(len(FD))],
+			"Price":[float(FD[i][3]) for i in range(len(FD))],
+			"Open":[float(FD[i][4]) for i in range(len(FD))],
+			"High":[float(FD[i][5]) for i in range(len(FD))],
+			"Low":[float(FD[i][6]) for i in range(len(FD))]
+			}
+		PriceData = pd.DataFrame(Reformated_data)
+		return PriceData
+
+
