@@ -6,6 +6,11 @@ import gc
 import warnings
 warnings.filterwarnings("ignore")
 import pandas as pd
+urllib3.disable_warnings()
+import matplotlib.pyplot as plt
+import numpy as np
+from statsmodels.tsa.arima.model import ARIMA
+from sklearn.metrics import mean_squared_error
 
 
 class pred:
@@ -17,7 +22,7 @@ class pred:
 		ml=ml.data
 		da=str(ml)
 		return da
-	def reformat(self,Da):
+	def reformat(self,da):
 		i=0
 		FD=[]
 		lis=[]
@@ -42,16 +47,56 @@ class pred:
 			if '<time dateTime=' not in da[i+1:len(da)]:
 				break
 		FD.reverse()
-		FD=[[FD[i][0].replace('/','-')]+FD[i][1:5] for i in range(len(FD))]
+		FD=[FD[i][0].split('/')+FD[i][1:5] for i in range(len(FD))]
 		Reformated_data = {
-			"Date":[FD[i][0] for i in range(len(FD))],
-			"Price":[float(FD[i][1]) for i in range(len(FD))],
-			"Open":[float(FD[i][2]) for i in range(len(FD))],
-			"High":[float(FD[i][3]) for i in range(len(FD))],
-			"Low":[float(FD[i][4]) for i in range(len(FD))]
+			"Month":[int(FD[i][0]) for i in range(len(FD))],
+			"Day":[int(FD[i][1]) for i in range(len(FD))],
+			"Year":[int(FD[i][2]) for i in range(len(FD))],
+			"Price":[float(FD[i][3]) for i in range(len(FD))],
+			"Open":[float(FD[i][4]) for i in range(len(FD))],
+			"High":[float(FD[i][5]) for i in range(len(FD))],
+			"Low":[float(FD[i][6]) for i in range(len(FD))]
 			}
 		PriceData = pd.DataFrame(Reformated_data)
 		return PriceData
-
-
+	def estim(self,PriceData):
+		model = ARIMA(PriceData['Low'], order=(1, 1, 1))
+		model_fit = model.fit()
+		forecast = model_fit.get_forecast(steps=30)
+		train_size = int(len(PriceData) * 0.8)
+		train, test = PriceData[0:train_size], PriceData[train_size:len(PriceData)]
+		model_train = ARIMA(train['Low'], order=(1, 1, 1))
+		model_train_fit = model_train.fit()
+		test_forecast = model_train_fit.get_forecast(steps=len(test))
+		test_forecast_series = pd.Series(test_forecast.predicted_mean, index=test.index)
+		mse = mean_squared_error(test['Low'], test_forecast_series)
+		rmse = mse**0.5
+		model2 = ARIMA(PriceData['High'], order=(1, 1, 1))
+		model_fit2 = model2.fit()
+		forecast2 = model_fit2.get_forecast(steps=30)
+		train_size2 = int(len(PriceData) * 0.8)
+		train2, test2 = PriceData[0:train_size2], PriceData[train_size2:len(PriceData)]
+		model_train2 = ARIMA(train2['High'], order=(1, 1, 1))
+		model_train_fit2 = model_train2.fit()
+		test_forecast2 = model_train_fit2.get_forecast(steps=len(test2))
+		test_forecast_series2 = pd.Series(test_forecast2.predicted_mean, index=test2.index)
+		mse2 = mean_squared_error(test2['High'], test_forecast_series2)
+		rmse2 = mse2**0.5
+		plt.figure(figsize=(14,7))
+		plt.plot(train['Low'], label='Training Low', color='red')
+		plt.plot(test['Low'], label='Actual Low', color='red')
+		plt.plot(test_forecast_series, label='Forecasted Low', color='yellow')
+		plt.plot(train2['High'], label='Training High', color='blue')
+		plt.plot(test2['High'], label='Actual High', color='blue')
+		plt.plot(test_forecast_series2, label='Forecasted High', color='green')
+		plt.fill_between(test.index, test_forecast.conf_int().iloc[:, 0],
+				 test_forecast.conf_int().iloc[:, 1],color='k', alpha=.15)
+		plt.fill_between(test2.index, test_forecast2.conf_int().iloc[:, 0],
+				 test_forecast2.conf_int().iloc[:, 1],color='k', alpha=.15)
+		plt.title('ARIMA Model Evaluation')
+		plt.xlabel('Day')
+		plt.ylabel('Price')
+		plt.legend()
+		plt.show()
+		return [rmse, rmse2]
 
