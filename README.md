@@ -77,6 +77,18 @@ forcast=w.estim(gbpusdData)
 
 
 
+![Figure_1_gbp_usd](https://github.com/Fadhaa/Currencies-Price-prediction/assets/18240431/4099ec59-2197-479c-a32a-86a03f396321)
+
+
+
+
+We also import eur_usd data from the link
+
+
+w=pred()
+eurusdData=w.getData('https://www.investing.com/currencies/eur-usd-historical-data')
+
+forcast=w.estim(eurusdData)
 
 
 
@@ -84,7 +96,16 @@ forcast=w.estim(gbpusdData)
 
 
 
-![download](https://github.com/Fadhaa/Currencies-Price-prediction/assets/18240431/ad421aec-caea-4ccb-8e38-ce6b32484709)
+
+
+
+
+
+
+
+
+
+![Figure_1_eur_usd](https://github.com/Fadhaa/Currencies-Price-prediction/assets/18240431/3e5204d6-7474-4aa1-a637-ab7ee8dbd781)
 
 
 
@@ -97,4 +118,18 @@ forcast=w.estim(gbpusdData)
 
 
 
-![download](https://github.com/Fadhaa/Currencies-Price-prediction/assets/18240431/abe7f429-b52c-4db2-ac4a-3b78bc6f6138)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
