@@ -34,6 +34,7 @@ Import historical Data from website www.investing.com. In this method, you will 
 use the following code
 
 w=pred()
+
 gbpusdData=w.getData('https://www.investing.com/currencies/gbp-usd-historical-data')
 
 
