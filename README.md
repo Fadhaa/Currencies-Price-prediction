@@ -34,8 +34,11 @@ Import historical Data from website www.investing.com. In this method, you will 
 use the following code
 
 w=Pred()
+
 e=w.getData('https://www.investing.com/currencies/usd-jpy-historical-data')
+
 ee=w.reformat(e)
+
 et2=w.estim(ee)
 
 examples here 
