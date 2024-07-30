@@ -38,7 +38,9 @@ e=w.getData('https://www.investing.com/currencies/usd-jpy-historical-data')
 ee=w.reformat(e)
 et2=w.estim(ee)
 
+examples here 
 
+https://github.com/Fadhaa/Currencies-Price-prediction/blob/main/updated-currencies-forecasting.ipynb
 
 
 
