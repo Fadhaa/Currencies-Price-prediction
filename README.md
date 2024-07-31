@@ -1,6 +1,6 @@
 Currencies-Price-prediction
 
-This code to import data from investing.com after I tried to use investpy, but it's seemingly not working due to connection problems
+This code is to import data from investing.com after I tried to use investpy, but it's seemingly not working due to connection problems
 
 Step 1: install 
 python3
